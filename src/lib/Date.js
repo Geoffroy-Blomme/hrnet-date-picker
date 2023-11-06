@@ -6,6 +6,10 @@ const DatePicker = (props) => {
   const { id, yearsBackWard = 60, yearsForward = 60 } = props;
   const ref = useRef();
   const [datePickerIsHidden, setDatePickerIsHidden] = useState(true);
+  const labelMonthId = id + "-label_month";
+  const labelYearId = id + "-label_year";
+  const monthSCrollerId = id + "-month_scroller";
+  const yearScrollId = id + "-year_scroller";
   const setDatePickerIsHiddenToFalse = () => {
     setDatePickerIsHidden(false);
   };
@@ -21,6 +25,7 @@ const DatePicker = (props) => {
   const currentDay = currentDate.getDate();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
+  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const monthNames = [
     "January",
     "February",
@@ -38,21 +43,51 @@ const DatePicker = (props) => {
   const [pickedYear, setPickedYear] = useState(currentYear);
   const [pickedMonth, setPickedMonth] = useState(currentMonth);
   const [pickedDay, setPickedDay] = useState(currentDay);
+  const [displayedMonth, setDisplayedMonth] = useState(currentMonth);
+  const [displayedYear, setDisplayedYear] = useState(currentYear);
+
   const aDateIsPicked = (event) => {
     let dayPicked = event.target.innerText;
-    let monthPicked = "" + (Number(pickedMonth) + 1);
-    console.log(event.target.parentNode);
-    console.log(event.target.parentNode.style);
+    let monthPicked = "" + (Number(displayedMonth) + 1);
+    let yearPicked = Number(displayedYear);
+    let parentNodeClassList = event.target.parentNode.classList;
+    if (parentNodeClassList.value.includes("xdsoft_other_month")) {
+      if (Number(dayPicked) > 7) {
+        monthPicked = "" + (Number(monthPicked) - 1);
+        if (monthPicked === "0") {
+          monthPicked = "12";
+          yearPicked = Number(displayedYear - 1);
+          setDisplayedYear(yearPicked);
+          setPickedYear(yearPicked);
+        }
+        setDisplayedMonth(monthPicked - 1);
+        setPickedMonth(monthPicked - 1);
+      } else {
+        monthPicked = "" + (Number(monthPicked) + 1);
+        if (monthPicked === "13") {
+          monthPicked = "1";
+          yearPicked = Number(displayedYear + 1);
+          setDisplayedYear(yearPicked);
+          setPickedYear(yearPicked);
+
+          setDisplayedMonth(monthPicked - 1);
+          setPickedMonth(monthPicked - 1);
+        }
+      }
+    }
     if (monthPicked.length === 1) {
       monthPicked = "0" + monthPicked;
     }
     if (dayPicked.length === 1) {
       dayPicked = "0" + dayPicked;
     }
-    setPickedDay(dayPicked);
+    setPickedDay(Number(dayPicked));
+    setPickedMonth(Number(monthPicked) - 1);
+    setDisplayedMonth(Number(monthPicked) - 1);
+    setPickedYear(Number(yearPicked));
     setDatePickerIsHiddenToTrue();
     const input = document.querySelector(`#${id}`);
-    input.value = "" + monthPicked + "/" + dayPicked + "/" + pickedYear;
+    input.value = "" + monthPicked + "/" + dayPicked + "/" + yearPicked;
   };
   const inputKeyUpHandler = (event) => {
     if (event.keyCode === 8) {
@@ -78,12 +113,11 @@ const DatePicker = (props) => {
   };
 
   const onBlurHandler = (event) => {
-    let datePicker = document.querySelector("#date-picker-main-div");
+    let datePicker = document.querySelector("#create-employee > div > div");
     if (!datePicker.contains(event.relatedTarget)) {
       if (dateIsCorrect(event.target.value)) {
         setPickedMonth(Number(event.target.value.slice(0, 2)) - 1);
-        setPickedDay(event.target.value.slice(3, 5));
-        setPickedYear(event.target.value.slice(6, 10));
+        setPickedYear(Number(event.target.value.slice(6, 10)));
       } else {
         if (event.target.value !== "") {
           setPickedDay(currentDay);
@@ -128,57 +162,134 @@ const DatePicker = (props) => {
     setYearMenuIsOpen(false);
   };
 
-  function GenerateDays(props) {
-    const { year, month } = props;
-    const nbDaysInMonth = new Date(year, month + 1, 0).getDate();
-    let rows = [];
-    for (let i = 0; i * 7 < nbDaysInMonth; i++) {
-      let tds = [];
-      for (let t = 1; t < 8 && i * 7 + t <= nbDaysInMonth; t++) {
-        let innerText = `${i * 7 + t}`;
-        let currentDateClass =
-          year === currentYear &&
-          month === currentMonth &&
-          i * 7 + t === currentDay
-            ? "xdsoft_today"
-            : "";
-        let classToAdd = currentDateClass;
-        let div = createElement(
-          "div",
-          {
-            onClick: aDateIsPicked,
-            key: innerText,
-            "year-value": year,
-            "month-value": month,
-            "day-value": innerText,
-            tabIndex: innerText,
-          },
-          innerText
-        );
-        let td = createElement("td", {
-          children: div,
-          key: innerText,
-          className: classToAdd,
-        });
-        tds.push(td);
+  const scrollToPickedMonth = () => {
+    const scrollMonths = document.querySelector("#" + monthSCrollerId);
+    const options = scrollMonths.querySelectorAll(".xdsoft_option");
+    let offsetTop;
+    options.forEach((option) => {
+      if (option.getAttribute("data-value") === displayedMonth.toString()) {
+        offsetTop = option.offsetTop;
       }
-      let row = createElement("tr", { children: tds, key: i });
-      rows.push(row);
-    }
-    const tBody = createElement("tbody", { children: rows });
-    return tBody;
+    });
+    scrollMonths.scrollTop = offsetTop;
+  };
+
+  const scrollToPickedYear = () => {
+    const scrollYears = document.querySelector("#" + yearScrollId);
+    const options = scrollYears.querySelectorAll(".xdsoft_option");
+    let offsetTop;
+    options.forEach((option) => {
+      if (option.getAttribute("data-value") === displayedYear.toString()) {
+        offsetTop = option.offsetTop;
+      }
+    });
+    scrollYears.scrollTop = offsetTop;
+  };
+
+  function firstDayOfDate(year, month) {
+    const givenDate = new Date(year.toString(), month.toString());
+    return givenDate.getDay();
   }
 
-  function MonthsScroll() {
+  function lastDayOfDate(year, month) {
+    const givenDate = new Date(year.toString(), (month + 1).toString(), 0);
+    return givenDate.getDate();
+  }
+
+  function tableHead() {
+    let daysThs = [];
+    dayNames.map((day, index) => {
+      let dayTh = createElement("th", { children: day, key: index });
+      daysThs.push(dayTh);
+    });
+    let row = createElement("tr", { children: daysThs });
+    let tHead = createElement("thead", { children: row, key: 0 });
+    return tHead;
+  }
+
+  function GenerateDays(props) {
+    const { year, month } = props;
+    const firstDayMonth = firstDayOfDate(year, month);
+    const nbDaysInCurrentMonth = lastDayOfDate(year, month);
+    let nbDaysLastMonth;
+    if (month.toString() === "0") {
+      nbDaysLastMonth = lastDayOfDate(year - 1, 11);
+    } else {
+      nbDaysLastMonth = lastDayOfDate(year, month - 1);
+    }
+    const nbOfDaysToGenerate =
+      nbDaysInCurrentMonth +
+      firstDayMonth +
+      ((7 - ((nbDaysInCurrentMonth + firstDayMonth) % 7)) % 7);
+    let rows = [];
+    let tds = [];
+    for (let i = 0; i < nbOfDaysToGenerate; i++) {
+      let innerText = "";
+      let classToAdd =
+        year === currentYear &&
+        month === currentMonth &&
+        i - firstDayMonth + 1 === currentDay
+          ? "xdsoft_today "
+          : "";
+      if (i - firstDayMonth + 1 === pickedDay) {
+        classToAdd += "xdsoft_current";
+      }
+      if (i < firstDayMonth || i >= nbDaysInCurrentMonth + firstDayMonth) {
+        classToAdd += "xdsoft_other_month";
+      } else {
+        innerText = i - firstDayMonth + 1;
+      }
+      if (i < firstDayMonth) {
+        innerText = "" + nbDaysLastMonth - firstDayMonth + i + 1;
+      }
+      if (i >= nbDaysInCurrentMonth + firstDayMonth) {
+        innerText = "" + (i - nbDaysInCurrentMonth - firstDayMonth + 1);
+      }
+
+      let div = createElement(
+        "div",
+        {
+          onClick: aDateIsPicked,
+          key: i,
+          tabIndex: innerText,
+        },
+        innerText
+      );
+      let td = createElement("td", {
+        children: div,
+        key: i,
+        className: classToAdd,
+      });
+      tds.push(td);
+      if (tds.length === 7) {
+        let row = createElement("tr", { children: tds, key: i });
+        rows.push(row);
+        tds = [];
+      }
+    }
+
+    const tHead = tableHead();
+    const tBody = createElement("tbody", { children: rows, key: 1 });
+    const table = createElement("table", { children: [tHead, tBody] });
+    return table;
+  }
+
+  function MonthsScroll(props) {
+    let monthProp = props.month;
     let divMonths = [];
     monthNames.forEach((month, index) => {
+      let classToAdd = "";
+      if (index === monthProp) {
+        classToAdd += "xdsoft_current";
+      }
       const divYear = createElement(
         "div",
         {
-          className: "xdsoft_option",
+          className: "xdsoft_option " + classToAdd,
           "data-value": index,
           onClick: () => {
             setPickedMonth(monthNames.indexOf(month));
+            setDisplayedMonth(monthNames.indexOf(month));
           },
           key: index,
         },
@@ -191,18 +302,30 @@ const DatePicker = (props) => {
     });
     return divToReturn;
   }
-  function YearsScroll() {
+  function YearsScroll(props) {
+    let yearProp = props.year;
     let divYears = [];
     for (let i = 0; i <= yearsBackWard + yearsForward; i++) {
       const year = currentYear - yearsBackWard + i;
+      let classToAdd = "";
+      if (typeof year !== "number") {
+        console.log("weird");
+      }
+      if (typeof yearProp !== "number") {
+        console.log("weird prop");
+      }
+      if (year === yearProp) {
+        classToAdd += "xdsoft_current";
+      }
       const divYear = createElement(
         "div",
         {
-          className: "xdsoft_option",
+          className: "xdsoft_option " + classToAdd,
           "data-value": year.toString(),
           key: i,
           onClick: () => {
             setPickedYear(year);
+            setDisplayedYear(year);
           },
         },
         year.toString()
@@ -215,9 +338,8 @@ const DatePicker = (props) => {
     });
     return divToReturn;
   }
-  YearsScroll();
   return (
-    <div id="date-picker-main-div" onBlur={onBlurHandler}>
+    <div onBlur={onBlurHandler}>
       <input
         onFocus={setDatePickerIsHiddenToFalse}
         onKeyUp={inputKeyUpHandler}
@@ -229,6 +351,14 @@ const DatePicker = (props) => {
       <div
         ref={ref}
         className="xdsoft_datetimepicker xdsoft_noselect xdsoft_"
+        onClick={() => {
+          if (monthMenuIsOpen) {
+            setMonthMenuIsOpen(false);
+          }
+          if (yearMenuIsOpen) {
+            setYearMenuIsOpen(false);
+          }
+        }}
         style={{
           position: "absolute",
           display: datePickerIsHidden ? "none" : "block",
@@ -241,13 +371,11 @@ const DatePicker = (props) => {
               className="xdsoft_prev"
               style={{ visibility: "visible" }}
               onClick={() => {
-                if (pickedMonth !== 0) {
-                  setPickedMonth(pickedMonth - 1);
+                if (displayedMonth !== 0) {
+                  setDisplayedMonth(displayedMonth - 1);
                 } else {
-                  if (pickedYear !== currentYear - yearsBackWard) {
-                    setPickedYear(Number(pickedYear) - 1);
-                    setPickedMonth(11);
-                  }
+                  setDisplayedYear(Number(displayedYear) - 1);
+                  setDisplayedMonth(11);
                 }
               }}
             ></button>
@@ -257,63 +385,92 @@ const DatePicker = (props) => {
               style={{ visibility: "visible" }}
               onClick={() => {
                 setPickedDay(currentDay);
+                setDisplayedMonth(currentMonth);
                 setPickedMonth(currentMonth);
+                setDisplayedYear(currentYear);
                 setPickedYear(currentYear);
               }}
             ></button>
-            <div className="xdsoft_label xdsoft_month">
-              <span onClick={toggleMonthMenu}>{monthNames[pickedMonth]}</span>
+            <div className="xdsoft_label xdsoft_month" id={labelMonthId}>
+              <span
+                onClick={() => {
+                  toggleMonthMenu();
+                  scrollToPickedMonth();
+                }}
+              >
+                {monthNames[displayedMonth]}
+              </span>
 
               <div
                 className="xdsoft_select xdsoft_monthselect xdsoft_scroller_box"
+                id={monthSCrollerId}
                 style={{
-                  display: monthMenuIsOpen ? "block" : "none",
+                  visibility: monthMenuIsOpen ? "visible" : "hidden",
                   overflowY: "auto",
                 }}
-                onClick={toggleMonthMenu}
+                onClick={() => {
+                  toggleMonthMenu();
+                  scrollToPickedMonth();
+                }}
               >
-                <MonthsScroll></MonthsScroll>
+                <MonthsScroll month={displayedMonth}></MonthsScroll>
               </div>
-              <i onClick={toggleMonthMenu}></i>
+              <i
+                onClick={() => {
+                  toggleMonthMenu();
+                  scrollToPickedMonth();
+                }}
+              ></i>
             </div>
-            <div className="xdsoft_label xdsoft_year">
-              <span onClick={toggleYearMenu}>{pickedYear}</span>
+            <div className="xdsoft_label xdsoft_year" id={labelYearId}>
+              <span
+                onClick={() => {
+                  toggleYearMenu();
+                  scrollToPickedYear();
+                }}
+              >
+                {displayedYear}
+              </span>
               <div
-                onClick={toggleYearMenu}
+                onClick={() => {
+                  toggleYearMenu();
+                  scrollToPickedYear();
+                }}
                 className="xdsoft_select xdsoft_yearselect xdsoft_scroller_box"
+                id={yearScrollId}
                 style={{
-                  display: yearMenuIsOpen ? "block" : "none",
+                  visibility: yearMenuIsOpen ? "visible" : "hidden",
                   overflowY: "auto",
                 }}
               >
-                <YearsScroll></YearsScroll>
+                <YearsScroll year={displayedYear}></YearsScroll>
               </div>
-              <i onClick={toggleYearMenu}></i>
+              <i
+                onClick={() => {
+                  toggleYearMenu();
+                  scrollToPickedYear();
+                }}
+              ></i>
             </div>
             <button
               type="button"
               className="xdsoft_next"
               style={{ visibility: "visible" }}
               onClick={() => {
-                if (pickedMonth !== 11) {
-                  setPickedMonth(pickedMonth + 1);
+                if (displayedMonth !== 11) {
+                  setDisplayedMonth(displayedMonth + 1);
                 } else {
-                  console.log(currentYear + " " + "picked");
-                  if (pickedYear !== currentYear + yearsForward) {
-                    setPickedYear(Number(pickedYear) + 1);
-                    setPickedMonth(0);
-                  }
+                  setDisplayedYear(Number(displayedYear) + 1);
+                  setDisplayedMonth(0);
                 }
               }}
             ></button>
           </div>
           <div className="xdsoft_calendar">
-            <table>
-              <GenerateDays
-                year={pickedYear}
-                month={pickedMonth}
-              ></GenerateDays>
-            </table>
+            <GenerateDays
+              year={displayedYear}
+              month={displayedMonth}
+            ></GenerateDays>
           </div>
           <button
             type="button"
