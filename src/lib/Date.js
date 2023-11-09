@@ -1,6 +1,7 @@
 import "./Date.css";
 import { useState, createElement, useRef } from "react";
 import { useClickOutside } from "./UseClickOutside";
+import PropTypes from "prop-types";
 
 /**
  * @description Generates an input which on focus has a Date Picker pop-up
@@ -571,6 +572,12 @@ const DatePicker = (props) => {
       </div>
     </div>
   );
+};
+
+DatePicker.propTypes = {
+  id: PropTypes.string.isRequired,
+  yearsBackWard: PropTypes.number,
+  yearsForward: PropTypes.number,
 };
 
 export default DatePicker;
