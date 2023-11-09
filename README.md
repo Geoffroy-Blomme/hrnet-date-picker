@@ -7,6 +7,16 @@ A library generating an input that has a Date Picker pop-up on focus.
 Install the package with npm :  
 `npm install oc-gb-date-picker`
 
+## Documentation
+
+You can find the documentation here :
+
+> /docs/index.html
+
+How to generate the documentation :
+
+> npm run generate-docs
+
 ## Usage
 
 Start by importing the component in your React component :  
