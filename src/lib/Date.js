@@ -2,13 +2,16 @@ import "./Date.css";
 import { useState, createElement, useRef } from "react";
 import { useClickOutside } from "./UseClickOutside";
 import PropTypes from "prop-types";
+/**
+ * @namespace datePicker
 
+ */
 /**
  * @description Generates an input which on focus has a Date Picker pop-up
  * @param {string} id The id of the generated input
  * @param {number} yearsBackWard The number of backward years that the scroller will go
  * @param {number} yearsForward The number of forward years that the scroller will go
- * @namespace datePicker
+ * @memberof datePicker
  * @returns {React.Component} - The Date Picker component
  */
 const DatePicker = (props) => {
