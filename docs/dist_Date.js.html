@@ -1,4 +1,32 @@
-import "./Date.css";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: dist/Date.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: dist/Date.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import "./Date.css";
 import { useState, createElement, useRef } from "react";
 import { useClickOutside } from "./UseClickOutside";
 
@@ -91,11 +119,6 @@ const DatePicker = props => {
     const input = document.querySelector(`#${id}`);
     input.value = "" + monthPicked + "/" + dayPicked + "/" + yearPicked;
   };
-
-  /**
-   * Handles the adding/removal of the '/' in the input value.
-   * @memberof datePicker
-   */
   const inputKeyUpHandler = event => {
     if (event.keyCode === 8) {
       if (event.target.value.length === 2 || event.target.value.length === 5) {
@@ -107,13 +130,6 @@ const DatePicker = props => {
       }
     }
   };
-
-  /**
-   * Tests if a date is correct
-   * @param {string} dateStr The date to test
-   * @returns true if the string is a correct Date, false otherwise
-   * @memberof datePicker
-   */
   const dateIsCorrect = dateStr => {
     if (dateStr.length === 10) {
       return !isNaN(new Date(dateStr));
@@ -121,11 +137,6 @@ const DatePicker = props => {
       return false;
     }
   };
-
-  /**
-   * Verifies that the date in the input is valid
-   * @memberof datePicker
-   */
   const onBlurHandler = event => {
     let datePicker = document.querySelector("#create-employee > div > div");
     if (!datePicker.contains(event.relatedTarget)) {
@@ -142,21 +153,11 @@ const DatePicker = props => {
       }
     }
   };
-
-  /**
-   * Makes sure that the Date in the input is not too long
-   * @memberof datePicker
-   */
   const inputChangedHandler = event => {
     if (event.target.value.length === 11) {
       event.target.value = event.target.value.slice(0, event.target.value.length - 1);
     }
   };
-
-  /**
-   * Toggles the Year Menu
-   * @memberof datePicker
-   */
   const toggleYearMenu = () => {
     if (yearMenuIsOpen) {
       setYearMenuIsOpen(false);
@@ -165,11 +166,6 @@ const DatePicker = props => {
     }
     setMonthMenuIsOpen(false);
   };
-
-  /**
-   * Toggles the Month Menu
-   * @memberof datePicker
-   */
   const toggleMonthMenu = () => {
     if (monthMenuIsOpen) {
       setMonthMenuIsOpen(false);
@@ -178,11 +174,6 @@ const DatePicker = props => {
     }
     setYearMenuIsOpen(false);
   };
-
-  /**
-   * Scroll to the picked Month in the month scroller
-   * @memberof datePicker
-   */
   const scrollToPickedMonth = () => {
     const scrollMonths = document.querySelector("#" + monthSCrollerId);
     const options = scrollMonths.querySelectorAll(".xdsoft_option");
@@ -194,11 +185,6 @@ const DatePicker = props => {
     });
     scrollMonths.scrollTop = offsetTop;
   };
-
-  /**
-   * Scroll to the Picked Year in the year scroller
-   * @memberof datePicker
-   */
   const scrollToPickedYear = () => {
     const scrollYears = document.querySelector("#" + yearScrollId);
     const options = scrollYears.querySelectorAll(".xdsoft_option");
@@ -210,36 +196,14 @@ const DatePicker = props => {
     });
     scrollYears.scrollTop = offsetTop;
   };
-
-  /**
-   * Returns the index of the first day of the Date in the days of the Week
-   * @param {number} year year of the Date
-   * @param {number} month month of the Date
-   * @returns The index of the first day of the Date in the days of the Week
-   * @memberof datePicker
-   */
   function firstDayOfDate(year, month) {
     const givenDate = new Date(year.toString(), month.toString());
     return givenDate.getDay();
   }
-
-  /**
-   * Returns the last day of the Date
-   * @param {number} year year of the Date
-   * @param {number} month month of the Date
-   * @returns The last day of the Date
-   * @memberof datePicker
-   */
   function lastDayOfDate(year, month) {
     const givenDate = new Date(year.toString(), (month + 1).toString(), 0);
     return givenDate.getDate();
   }
-
-  /**
-   * Generates the thead of the Date Picker
-   * @returns The jsx for the thead of the Date Picker
-   * @memberof datePicker
-   */
   function tableHead() {
     let daysThs = [];
     dayNames.map((day, index) => {
@@ -258,14 +222,6 @@ const DatePicker = props => {
     });
     return tHead;
   }
-
-  /**
-   * Generates the calendar part of the DatePicker
-   * @param {string} year The year displayed
-   * @param {string} month The month displayed
-   * @returns The jsx of the calendar part of the DatePicker
-   * @memberof datePicker
-   */
   function GenerateDays(props) {
     const {
       year,
@@ -282,18 +238,18 @@ const DatePicker = props => {
     const nbOfDaysToGenerate = nbDaysInCurrentMonth + firstDayMonth + (7 - (nbDaysInCurrentMonth + firstDayMonth) % 7) % 7;
     let rows = [];
     let tds = [];
-    for (let i = 0; i < nbOfDaysToGenerate; i++) {
+    for (let i = 0; i &lt; nbOfDaysToGenerate; i++) {
       let innerText = "";
-      let classToAdd = year === currentYear && month === currentMonth && i - firstDayMonth + 1 === currentDay ? "xdsoft_today " : "";
+      let classToAdd = year === currentYear &amp;&amp; month === currentMonth &amp;&amp; i - firstDayMonth + 1 === currentDay ? "xdsoft_today " : "";
       if (i - firstDayMonth + 1 === pickedDay) {
         classToAdd += "xdsoft_current";
       }
-      if (i < firstDayMonth || i >= nbDaysInCurrentMonth + firstDayMonth) {
+      if (i &lt; firstDayMonth || i >= nbDaysInCurrentMonth + firstDayMonth) {
         classToAdd += "xdsoft_other_month";
       } else {
         innerText = i - firstDayMonth + 1;
       }
-      if (i < firstDayMonth) {
+      if (i &lt; firstDayMonth) {
         innerText = "" + nbDaysLastMonth - firstDayMonth + i + 1;
       }
       if (i >= nbDaysInCurrentMonth + firstDayMonth) {
@@ -329,13 +285,6 @@ const DatePicker = props => {
     });
     return table;
   }
-
-  /**
-   * Generates the jsx for the displayed Month and scroller month part of the Date Picker
-   * @param {number} monthProp The month that must be displayed
-   * @returns the jsx for the displayed Month and scroller month part of the Date Picker
-   * @memberof datePicker
-   */
   function MonthsScroll(props) {
     let monthProp = props.month;
     let divMonths = [];
@@ -360,17 +309,10 @@ const DatePicker = props => {
     });
     return divToReturn;
   }
-
-  /**
-   * Generates the jsx for the displayed Year and scroller year part of the Date Picker
-   * @param {number} yearProp The year that must be displayed
-   * @returns the jsx for the displayed year and scroller year part of the Date Picker
-   * @memberof datePicker
-   */
   function YearsScroll(props) {
     let yearProp = props.year;
     let divYears = [];
-    for (let i = 0; i <= yearsBackWard + yearsForward; i++) {
+    for (let i = 0; i &lt;= yearsBackWard + yearsForward; i++) {
       const year = currentYear - yearsBackWard + i;
       let classToAdd = "";
       if (typeof year !== "number") {
@@ -547,4 +489,26 @@ const DatePicker = props => {
     })]
   });
 };
-export default DatePicker;
+export default DatePicker;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="datePicker.html">datePicker</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Nov 09 2023 20:35:09 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
   "name": "oc-gb-date-picker",
-  "version": "0.4.1",
+  "version": "0.5.2",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -11,7 +11,8 @@
     "start": "react-scripts start",
     "build": "del dist && NODE_ENV=production babel src/lib --out-dir dist --copy-files --ignore __tests__,spec.js,test.js,__snapshots__",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate-docs": "jsdoc -c jsdoc.conf.json"
   },
   "eslintConfig": {
     "extends": [
@@ -32,6 +33,7 @@
     ]
   },
   "devDependencies": {
+    "jsdoc": "^4.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1"

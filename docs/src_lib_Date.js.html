@@ -1,4 +1,32 @@
-import "./Date.css";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/lib/Date.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/lib/Date.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import "./Date.css";
 import { useState, createElement, useRef } from "react";
 import { useClickOutside } from "./UseClickOutside";
 
@@ -10,14 +38,8 @@ import { useClickOutside } from "./UseClickOutside";
  * @namespace datePicker
  * @returns {React.Component} - The Date Picker component
  */
-import { jsx as _jsx } from "react/jsx-runtime";
-import { jsxs as _jsxs } from "react/jsx-runtime";
-const DatePicker = props => {
-  const {
-    id,
-    yearsBackWard = 60,
-    yearsForward = 60
-  } = props;
+const DatePicker = (props) => {
+  const { id, yearsBackWard = 60, yearsForward = 60 } = props;
   const ref = useRef();
   const [datePickerIsHidden, setDatePickerIsHidden] = useState(true);
   const labelMonthId = id + "-label_month";
@@ -27,18 +49,34 @@ const DatePicker = props => {
   const setDatePickerIsHiddenToFalse = () => {
     setDatePickerIsHidden(false);
   };
+
   const setDatePickerIsHiddenToTrue = () => {
     setDatePickerIsHidden(true);
   };
   useClickOutside(ref, !datePickerIsHidden, setDatePickerIsHiddenToTrue);
+
   const [yearMenuIsOpen, setYearMenuIsOpen] = useState(false);
   const [monthMenuIsOpen, setMonthMenuIsOpen] = useState(false);
+
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   const [pickedYear, setPickedYear] = useState(currentYear);
   const [pickedMonth, setPickedMonth] = useState(currentMonth);
   const [pickedDay, setPickedDay] = useState(currentDay);
@@ -49,7 +87,7 @@ const DatePicker = props => {
    * When a day is picked in the Date Picker, set the the picked Day/Month/Year then closes the Date Picker
    * @memberof datePicker
    */
-  const aDateIsPicked = event => {
+  const aDateIsPicked = (event) => {
     let dayPicked = event.target.innerText;
     let monthPicked = "" + (Number(displayedMonth) + 1);
     let yearPicked = Number(displayedYear);
@@ -72,6 +110,7 @@ const DatePicker = props => {
           yearPicked = Number(displayedYear + 1);
           setDisplayedYear(yearPicked);
           setPickedYear(yearPicked);
+
           setDisplayedMonth(monthPicked - 1);
           setPickedMonth(monthPicked - 1);
         }
@@ -96,10 +135,13 @@ const DatePicker = props => {
    * Handles the adding/removal of the '/' in the input value.
    * @memberof datePicker
    */
-  const inputKeyUpHandler = event => {
+  const inputKeyUpHandler = (event) => {
     if (event.keyCode === 8) {
       if (event.target.value.length === 2 || event.target.value.length === 5) {
-        event.target.value = event.target.value.slice(0, event.target.value.length - 1);
+        event.target.value = event.target.value.slice(
+          0,
+          event.target.value.length - 1
+        );
       }
     } else {
       if (event.target.value.length === 2 || event.target.value.length === 5) {
@@ -114,7 +156,7 @@ const DatePicker = props => {
    * @returns true if the string is a correct Date, false otherwise
    * @memberof datePicker
    */
-  const dateIsCorrect = dateStr => {
+  const dateIsCorrect = (dateStr) => {
     if (dateStr.length === 10) {
       return !isNaN(new Date(dateStr));
     } else {
@@ -126,7 +168,7 @@ const DatePicker = props => {
    * Verifies that the date in the input is valid
    * @memberof datePicker
    */
-  const onBlurHandler = event => {
+  const onBlurHandler = (event) => {
     let datePicker = document.querySelector("#create-employee > div > div");
     if (!datePicker.contains(event.relatedTarget)) {
       if (dateIsCorrect(event.target.value)) {
@@ -137,7 +179,14 @@ const DatePicker = props => {
           setPickedDay(currentDay);
           setPickedMonth(currentMonth);
           setPickedYear(currentYear);
-          event.target.value = "" + "" + (Number(currentMonth) + 1) + "/" + currentDay + "/" + currentYear;
+          event.target.value =
+            "" +
+            "" +
+            (Number(currentMonth) + 1) +
+            "/" +
+            currentDay +
+            "/" +
+            currentYear;
         }
       }
     }
@@ -147,9 +196,12 @@ const DatePicker = props => {
    * Makes sure that the Date in the input is not too long
    * @memberof datePicker
    */
-  const inputChangedHandler = event => {
+  const inputChangedHandler = (event) => {
     if (event.target.value.length === 11) {
-      event.target.value = event.target.value.slice(0, event.target.value.length - 1);
+      event.target.value = event.target.value.slice(
+        0,
+        event.target.value.length - 1
+      );
     }
   };
 
@@ -187,7 +239,7 @@ const DatePicker = props => {
     const scrollMonths = document.querySelector("#" + monthSCrollerId);
     const options = scrollMonths.querySelectorAll(".xdsoft_option");
     let offsetTop;
-    options.forEach(option => {
+    options.forEach((option) => {
       if (option.getAttribute("data-value") === displayedMonth.toString()) {
         offsetTop = option.offsetTop;
       }
@@ -203,7 +255,7 @@ const DatePicker = props => {
     const scrollYears = document.querySelector("#" + yearScrollId);
     const options = scrollYears.querySelectorAll(".xdsoft_option");
     let offsetTop;
-    options.forEach(option => {
+    options.forEach((option) => {
       if (option.getAttribute("data-value") === displayedYear.toString()) {
         offsetTop = option.offsetTop;
       }
@@ -243,19 +295,11 @@ const DatePicker = props => {
   function tableHead() {
     let daysThs = [];
     dayNames.map((day, index) => {
-      let dayTh = /*#__PURE__*/createElement("th", {
-        children: day,
-        key: index
-      });
+      let dayTh = createElement("th", { children: day, key: index });
       daysThs.push(dayTh);
     });
-    let row = /*#__PURE__*/createElement("tr", {
-      children: daysThs
-    });
-    let tHead = /*#__PURE__*/createElement("thead", {
-      children: row,
-      key: 0
-    });
+    let row = createElement("tr", { children: daysThs });
+    let tHead = createElement("thead", { children: row, key: 0 });
     return tHead;
   }
 
@@ -267,10 +311,7 @@ const DatePicker = props => {
    * @memberof datePicker
    */
   function GenerateDays(props) {
-    const {
-      year,
-      month
-    } = props;
+    const { year, month } = props;
     const firstDayMonth = firstDayOfDate(year, month);
     const nbDaysInCurrentMonth = lastDayOfDate(year, month);
     let nbDaysLastMonth;
@@ -279,54 +320,60 @@ const DatePicker = props => {
     } else {
       nbDaysLastMonth = lastDayOfDate(year, month - 1);
     }
-    const nbOfDaysToGenerate = nbDaysInCurrentMonth + firstDayMonth + (7 - (nbDaysInCurrentMonth + firstDayMonth) % 7) % 7;
+    const nbOfDaysToGenerate =
+      nbDaysInCurrentMonth +
+      firstDayMonth +
+      ((7 - ((nbDaysInCurrentMonth + firstDayMonth) % 7)) % 7);
     let rows = [];
     let tds = [];
-    for (let i = 0; i < nbOfDaysToGenerate; i++) {
+    for (let i = 0; i &lt; nbOfDaysToGenerate; i++) {
       let innerText = "";
-      let classToAdd = year === currentYear && month === currentMonth && i - firstDayMonth + 1 === currentDay ? "xdsoft_today " : "";
+      let classToAdd =
+        year === currentYear &amp;&amp;
+        month === currentMonth &amp;&amp;
+        i - firstDayMonth + 1 === currentDay
+          ? "xdsoft_today "
+          : "";
       if (i - firstDayMonth + 1 === pickedDay) {
         classToAdd += "xdsoft_current";
       }
-      if (i < firstDayMonth || i >= nbDaysInCurrentMonth + firstDayMonth) {
+      if (i &lt; firstDayMonth || i >= nbDaysInCurrentMonth + firstDayMonth) {
         classToAdd += "xdsoft_other_month";
       } else {
         innerText = i - firstDayMonth + 1;
       }
-      if (i < firstDayMonth) {
+      if (i &lt; firstDayMonth) {
         innerText = "" + nbDaysLastMonth - firstDayMonth + i + 1;
       }
       if (i >= nbDaysInCurrentMonth + firstDayMonth) {
         innerText = "" + (i - nbDaysInCurrentMonth - firstDayMonth + 1);
       }
-      let div = /*#__PURE__*/createElement("div", {
-        onClick: aDateIsPicked,
-        key: i,
-        tabIndex: innerText
-      }, innerText);
-      let td = /*#__PURE__*/createElement("td", {
+
+      let div = createElement(
+        "div",
+        {
+          onClick: aDateIsPicked,
+          key: i,
+          tabIndex: innerText,
+        },
+        innerText
+      );
+      let td = createElement("td", {
         children: div,
         key: i,
-        className: classToAdd
+        className: classToAdd,
       });
       tds.push(td);
       if (tds.length === 7) {
-        let row = /*#__PURE__*/createElement("tr", {
-          children: tds,
-          key: i
-        });
+        let row = createElement("tr", { children: tds, key: i });
         rows.push(row);
         tds = [];
       }
     }
+
     const tHead = tableHead();
-    const tBody = /*#__PURE__*/createElement("tbody", {
-      children: rows,
-      key: 1
-    });
-    const table = /*#__PURE__*/createElement("table", {
-      children: [tHead, tBody]
-    });
+    const tBody = createElement("tbody", { children: rows, key: 1 });
+    const table = createElement("table", { children: [tHead, tBody] });
     return table;
   }
 
@@ -344,19 +391,23 @@ const DatePicker = props => {
       if (index === monthProp) {
         classToAdd += "xdsoft_current";
       }
-      const divYear = /*#__PURE__*/createElement("div", {
-        className: "xdsoft_option " + classToAdd,
-        "data-value": index,
-        onClick: () => {
-          setPickedMonth(monthNames.indexOf(month));
-          setDisplayedMonth(monthNames.indexOf(month));
+      const divYear = createElement(
+        "div",
+        {
+          className: "xdsoft_option " + classToAdd,
+          "data-value": index,
+          onClick: () => {
+            setPickedMonth(monthNames.indexOf(month));
+            setDisplayedMonth(monthNames.indexOf(month));
+          },
+          key: index,
         },
-        key: index
-      }, month);
+        month
+      );
       divMonths.push(divYear);
     });
-    const divToReturn = /*#__PURE__*/createElement("div", {
-      children: divMonths
+    const divToReturn = createElement("div", {
+      children: divMonths,
     });
     return divToReturn;
   }
@@ -370,7 +421,7 @@ const DatePicker = props => {
   function YearsScroll(props) {
     let yearProp = props.year;
     let divYears = [];
-    for (let i = 0; i <= yearsBackWard + yearsForward; i++) {
+    for (let i = 0; i &lt;= yearsBackWard + yearsForward; i++) {
       const year = currentYear - yearsBackWard + i;
       let classToAdd = "";
       if (typeof year !== "number") {
@@ -382,169 +433,195 @@ const DatePicker = props => {
       if (year === yearProp) {
         classToAdd += "xdsoft_current";
       }
-      const divYear = /*#__PURE__*/createElement("div", {
-        className: "xdsoft_option " + classToAdd,
-        "data-value": year.toString(),
-        key: i,
-        onClick: () => {
-          setPickedYear(year);
-          setDisplayedYear(year);
-        }
-      }, year.toString());
+      const divYear = createElement(
+        "div",
+        {
+          className: "xdsoft_option " + classToAdd,
+          "data-value": year.toString(),
+          key: i,
+          onClick: () => {
+            setPickedYear(year);
+            setDisplayedYear(year);
+          },
+        },
+        year.toString()
+      );
       divYears.push(divYear);
     }
-    const divToReturn = /*#__PURE__*/createElement("div", {
-      style: {
-        marginTop: "0px"
-      },
-      children: divYears
+    const divToReturn = createElement("div", {
+      style: { marginTop: "0px" },
+      children: divYears,
     });
     return divToReturn;
   }
-  return /*#__PURE__*/_jsxs("div", {
-    onBlur: onBlurHandler,
-    children: [/*#__PURE__*/_jsx("input", {
-      onFocus: setDatePickerIsHiddenToFalse,
-      onKeyUp: inputKeyUpHandler,
-      onChange: inputChangedHandler,
-      id: id,
-      type: "text",
-      placeholder: "mm/dd/yyyy"
-    }), /*#__PURE__*/_jsx("div", {
-      ref: ref,
-      className: "xdsoft_datetimepicker xdsoft_noselect xdsoft_",
-      onClick: () => {
-        if (monthMenuIsOpen) {
-          setMonthMenuIsOpen(false);
-        }
-        if (yearMenuIsOpen) {
-          setYearMenuIsOpen(false);
-        }
-      },
-      style: {
-        position: "absolute",
-        display: datePickerIsHidden ? "none" : "block"
-      },
-      children: /*#__PURE__*/_jsxs("div", {
-        className: "xdsoft_datepicker active",
-        children: [/*#__PURE__*/_jsxs("div", {
-          className: "xdsoft_monthpicker",
-          children: [/*#__PURE__*/_jsx("button", {
-            type: "button",
-            className: "xdsoft_prev",
-            style: {
-              visibility: "visible"
-            },
-            onClick: () => {
-              if (displayedMonth !== 0) {
-                setDisplayedMonth(displayedMonth - 1);
-              } else {
-                setDisplayedYear(Number(displayedYear) - 1);
-                setDisplayedMonth(11);
-              }
-            }
-          }), /*#__PURE__*/_jsx("button", {
-            type: "button",
-            className: "xdsoft_today_button",
-            style: {
-              visibility: "visible"
-            },
-            onClick: () => {
-              setPickedDay(currentDay);
-              setDisplayedMonth(currentMonth);
-              setPickedMonth(currentMonth);
-              setDisplayedYear(currentYear);
-              setPickedYear(currentYear);
-            }
-          }), /*#__PURE__*/_jsxs("div", {
-            className: "xdsoft_label xdsoft_month",
-            id: labelMonthId,
-            children: [/*#__PURE__*/_jsx("span", {
-              onClick: () => {
-                toggleMonthMenu();
-                scrollToPickedMonth();
-              },
-              children: monthNames[displayedMonth]
-            }), /*#__PURE__*/_jsx("div", {
-              className: "xdsoft_select xdsoft_monthselect xdsoft_scroller_box",
-              id: monthSCrollerId,
-              style: {
-                visibility: monthMenuIsOpen ? "visible" : "hidden",
-                overflowY: "auto"
-              },
-              onClick: () => {
-                toggleMonthMenu();
-                scrollToPickedMonth();
-              },
-              children: /*#__PURE__*/_jsx(MonthsScroll, {
-                month: displayedMonth
-              })
-            }), /*#__PURE__*/_jsx("i", {
-              onClick: () => {
-                toggleMonthMenu();
-                scrollToPickedMonth();
-              }
-            })]
-          }), /*#__PURE__*/_jsxs("div", {
-            className: "xdsoft_label xdsoft_year",
-            id: labelYearId,
-            children: [/*#__PURE__*/_jsx("span", {
-              onClick: () => {
-                toggleYearMenu();
-                scrollToPickedYear();
-              },
-              children: displayedYear
-            }), /*#__PURE__*/_jsx("div", {
-              onClick: () => {
-                toggleYearMenu();
-                scrollToPickedYear();
-              },
-              className: "xdsoft_select xdsoft_yearselect xdsoft_scroller_box",
-              id: yearScrollId,
-              style: {
-                visibility: yearMenuIsOpen ? "visible" : "hidden",
-                overflowY: "auto"
-              },
-              children: /*#__PURE__*/_jsx(YearsScroll, {
-                year: displayedYear
-              })
-            }), /*#__PURE__*/_jsx("i", {
-              onClick: () => {
-                toggleYearMenu();
-                scrollToPickedYear();
-              }
-            })]
-          }), /*#__PURE__*/_jsx("button", {
-            type: "button",
-            className: "xdsoft_next",
-            style: {
-              visibility: "visible"
-            },
-            onClick: () => {
-              if (displayedMonth !== 11) {
-                setDisplayedMonth(displayedMonth + 1);
-              } else {
-                setDisplayedYear(Number(displayedYear) + 1);
-                setDisplayedMonth(0);
-              }
-            }
-          })]
-        }), /*#__PURE__*/_jsx("div", {
-          className: "xdsoft_calendar",
-          children: /*#__PURE__*/_jsx(GenerateDays, {
-            year: displayedYear,
-            month: displayedMonth
-          })
-        }), /*#__PURE__*/_jsx("button", {
-          type: "button",
-          className: "xdsoft_save_selected blue-gradient-button",
-          style: {
-            display: "none"
-          },
-          children: "Save Selected"
-        })]
-      })
-    })]
-  });
+  return (
+    &lt;div onBlur={onBlurHandler}>
+      &lt;input
+        onFocus={setDatePickerIsHiddenToFalse}
+        onKeyUp={inputKeyUpHandler}
+        onChange={inputChangedHandler}
+        id={id}
+        type="text"
+        placeholder="mm/dd/yyyy"
+      />
+      &lt;div
+        ref={ref}
+        className="xdsoft_datetimepicker xdsoft_noselect xdsoft_"
+        onClick={() => {
+          if (monthMenuIsOpen) {
+            setMonthMenuIsOpen(false);
+          }
+          if (yearMenuIsOpen) {
+            setYearMenuIsOpen(false);
+          }
+        }}
+        style={{
+          position: "absolute",
+          display: datePickerIsHidden ? "none" : "block",
+        }}
+      >
+        &lt;div className="xdsoft_datepicker active">
+          &lt;div className="xdsoft_monthpicker">
+            &lt;button
+              type="button"
+              className="xdsoft_prev"
+              style={{ visibility: "visible" }}
+              onClick={() => {
+                if (displayedMonth !== 0) {
+                  setDisplayedMonth(displayedMonth - 1);
+                } else {
+                  setDisplayedYear(Number(displayedYear) - 1);
+                  setDisplayedMonth(11);
+                }
+              }}
+            >&lt;/button>
+            &lt;button
+              type="button"
+              className="xdsoft_today_button"
+              style={{ visibility: "visible" }}
+              onClick={() => {
+                setPickedDay(currentDay);
+                setDisplayedMonth(currentMonth);
+                setPickedMonth(currentMonth);
+                setDisplayedYear(currentYear);
+                setPickedYear(currentYear);
+              }}
+            >&lt;/button>
+            &lt;div className="xdsoft_label xdsoft_month" id={labelMonthId}>
+              &lt;span
+                onClick={() => {
+                  toggleMonthMenu();
+                  scrollToPickedMonth();
+                }}
+              >
+                {monthNames[displayedMonth]}
+              &lt;/span>
+
+              &lt;div
+                className="xdsoft_select xdsoft_monthselect xdsoft_scroller_box"
+                id={monthSCrollerId}
+                style={{
+                  visibility: monthMenuIsOpen ? "visible" : "hidden",
+                  overflowY: "auto",
+                }}
+                onClick={() => {
+                  toggleMonthMenu();
+                  scrollToPickedMonth();
+                }}
+              >
+                &lt;MonthsScroll month={displayedMonth}>&lt;/MonthsScroll>
+              &lt;/div>
+              &lt;i
+                onClick={() => {
+                  toggleMonthMenu();
+                  scrollToPickedMonth();
+                }}
+              >&lt;/i>
+            &lt;/div>
+            &lt;div className="xdsoft_label xdsoft_year" id={labelYearId}>
+              &lt;span
+                onClick={() => {
+                  toggleYearMenu();
+                  scrollToPickedYear();
+                }}
+              >
+                {displayedYear}
+              &lt;/span>
+              &lt;div
+                onClick={() => {
+                  toggleYearMenu();
+                  scrollToPickedYear();
+                }}
+                className="xdsoft_select xdsoft_yearselect xdsoft_scroller_box"
+                id={yearScrollId}
+                style={{
+                  visibility: yearMenuIsOpen ? "visible" : "hidden",
+                  overflowY: "auto",
+                }}
+              >
+                &lt;YearsScroll year={displayedYear}>&lt;/YearsScroll>
+              &lt;/div>
+              &lt;i
+                onClick={() => {
+                  toggleYearMenu();
+                  scrollToPickedYear();
+                }}
+              >&lt;/i>
+            &lt;/div>
+            &lt;button
+              type="button"
+              className="xdsoft_next"
+              style={{ visibility: "visible" }}
+              onClick={() => {
+                if (displayedMonth !== 11) {
+                  setDisplayedMonth(displayedMonth + 1);
+                } else {
+                  setDisplayedYear(Number(displayedYear) + 1);
+                  setDisplayedMonth(0);
+                }
+              }}
+            >&lt;/button>
+          &lt;/div>
+          &lt;div className="xdsoft_calendar">
+            &lt;GenerateDays
+              year={displayedYear}
+              month={displayedMonth}
+            >&lt;/GenerateDays>
+          &lt;/div>
+          &lt;button
+            type="button"
+            className="xdsoft_save_selected blue-gradient-button"
+            style={{ display: "none" }}
+          >
+            Save Selected
+          &lt;/button>
+        &lt;/div>
+      &lt;/div>
+    &lt;/div>
+  );
 };
+
 export default DatePicker;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="datePicker.html">datePicker</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Nov 09 2023 20:35:09 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
